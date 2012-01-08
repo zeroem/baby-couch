@@ -6,19 +6,19 @@ validators = require("couchtypes/validators")
 
 exports.weight = new Type "weight",
     fields:
-        date_added: fields.createdTime()
+        date: fields.number()
         weight: fields.number
             validators: [ validators.min 0 ]
 
 exports.length = new Type "length",
     fields:
-        date_added: fields.createdTime()
+        date: fields.number()
         length: fields.number
             validators: [ validators.min 0 ]
 
 exports.bottle_feeding = new Type "bottle_feeding",
     fields:
-        date_added: fields.createdTime()
+        time: fields.number()
         type: fields.choice
             values: [
                 ["formula", "Formula Milk"],
@@ -28,7 +28,8 @@ exports.bottle_feeding = new Type "bottle_feeding",
 
 exports.breast_feeding = new Type "breast_feeding",
     fields:
-        date_added: fields.createdTime()
+        startTime: fields.number()
+        stopTime: fields.number()
         side: fields.choice
             values: [
                 ["left", "Left Breast"],
@@ -37,7 +38,7 @@ exports.breast_feeding = new Type "breast_feeding",
 
 exports.diaper_change = new Type "diaper_change",
     fields:
-        date_added: fields.createdTime()
+        time: fields.number()
         contents: fields.choice
             values: [
                 ["wet", "Wet Diaper"],
