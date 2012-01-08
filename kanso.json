@@ -1,0 +1,31 @@
+{
+    "name": "baby-couch",
+    "version": "0.0.1",
+    "description": "Record all the important information related to your baby's formative years.",
+    "load": "lib/app",
+    "modules": "lib",
+    "attachments": "static",
+    "handlebars": {
+        "templates": "templates"
+    },
+    "duality": {
+        "base_template": "base.html"
+    },
+    "coffee-script": {
+        "modules": ["lib","tests"],
+        "attachements": ["js"]
+    },
+    "dependencies": {
+        "modules": null,
+        "db": null,
+        "properties": null,
+        "attachments": null,
+        "settings": null,
+        "duality": null,
+        "handlebars": null,
+        "handlebars-helpers": null,
+        "duality-handlebars": null,
+        "couchtypes": null,
+        "coffee-script-precompiler": null
+    }
+}
