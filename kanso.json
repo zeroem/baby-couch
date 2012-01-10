@@ -13,7 +13,7 @@
     },
     "coffee-script": {
         "modules": ["lib","tests"],
-        "attachements": ["js"]
+        "attachments": ["static/js"]
     },
     "dependencies": {
         "modules": null,
@@ -26,6 +26,7 @@
         "handlebars-helpers": null,
         "duality-handlebars": null,
         "couchtypes": null,
-        "coffee-script-precompiler": null
+        "coffee-script-precompiler": null,
+        "d3": null
     }
 }
