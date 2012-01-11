@@ -1,8 +1,13 @@
-
 Type   = require("couchtypes/types").Type
 fields  = require("couchtypes/fields")
 widgets = require("couchtypes/widgets")
 validators = require("couchtypes/validators")
+
+exports.comment = new Type "comment",
+    fields:
+        date: fields.number()
+        text: fields.string
+            widget: widgets.textarea({cols: 40, rows: 7})
 
 exports.weight = new Type "weight",
     fields:
@@ -29,7 +34,7 @@ exports.bottle_feeding = new Type "bottle_feeding",
 exports.breast_feeding = new Type "breast_feeding",
     fields:
         startTime: fields.number()
-        stopTime: fields.number()
+        duration: fields.number()
         side: fields.choice
             values: [
                 ["left", "Left Breast"],
