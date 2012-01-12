@@ -10,27 +10,29 @@ exports.import = (path) ->
             timestamp = new Date(row.Timestamp).getTime()
 
             if row.Left
-                docs.push breast_feeding timestamp, "left", minutes_to_seconds row.Left
+                sec = minutes_to_seconds row.Left
+                if sec > 0 then docs.push breast_feeding timestamp, "left", sec
 
             if row.Right
-                docs.push breast_feeding timestamp, "left", minutes_to_seconds row.Right
+                sec = minutes_to_seconds row.Right
+                if sec > 0 then docs.push breast_feeding timestamp, "right", sec
 
             if row.Supplement
                 type = "formula"
                 if row.Comment and row.Comment.toLowerCase().indexOf("breast") != -1
                     type = "human"
-                docs.push supplement timestamp, row.Supplement, type
+                amount = parseFloat row.Supplement
 
-            if row.BM
-                docs.push diaper_change timestamp, "bm", row.BM
+                if amount > 0 then docs.push supplement timestamp, amount, type
 
-            if row.Wet
-                docs.push diaper_change timestamp, "wet", row.BM
+            if row.BM then docs.push diaper_change timestamp, "bm", parseInt row.BM
 
-            if row.Comment
-                docs.push comment timestamp, row.Comment
+            if row.Wet then docs.push diaper_change timestamp, "wet", parseInt row.Wet
 
-        db.current().bulkSave docs, console.log
+            if row.Comment then docs.push comment timestamp, row.Comment
+
+        db.current().bulkSave docs, {all_or_nothing: true}, (err,resp) ->
+            console.log err
 
 breast_feeding = (timestamp, side, duration) ->
     type: "breast_feeding"
@@ -56,4 +58,4 @@ comment = (timestamp, comment) ->
     text: comment
 
 minutes_to_seconds = (mins) ->
-    mins * 60
+    parseFloat(mins) * 60
