@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Record all the important information related to your baby's formative years.",
     "load": "lib/app",
-    "modules": "lib",
+    "modules": ["lib","utils"],
     "attachments": "static",
     "handlebars": {
         "templates": "templates"
@@ -12,7 +12,7 @@
         "base_template": "base.html"
     },
     "coffee-script": {
-        "modules": ["lib","tests"],
+        "modules": ["lib","tests","utils"],
         "attachments": ["static/js"]
     },
     "dependencies": {
