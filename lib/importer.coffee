@@ -9,15 +9,15 @@ exports.import = (path) ->
         for row in rows
             timestamp = new Date(row.Timestamp).getTime()
 
-            if row.Left
+            if row.Left.length
                 sec = minutes_to_seconds row.Left
                 if sec > 0 then docs.push breast_feeding timestamp, "left", sec
 
-            if row.Right
+            if row.Right.length
                 sec = minutes_to_seconds row.Right
                 if sec > 0 then docs.push breast_feeding timestamp, "right", sec
 
-            if row.Supplement
+            if row.Supplement.length
                 type = "formula"
                 if row.Comment and row.Comment.toLowerCase().indexOf("breast") != -1
                     type = "human"
@@ -25,11 +25,11 @@ exports.import = (path) ->
 
                 if amount > 0 then docs.push supplement timestamp, amount, type
 
-            if row.BM then docs.push diaper_change timestamp, "bm", parseInt row.BM
+            if row.BM.length then docs.push diaper_change timestamp, "bm", parseInt row.BM
 
-            if row.Wet then docs.push diaper_change timestamp, "wet", parseInt row.Wet
+            if row.Wet.length then docs.push diaper_change timestamp, "wet", parseInt row.Wet
 
-            if row.Comment then docs.push comment timestamp, row.Comment
+            if row.Comment.length then docs.push comment timestamp, row.Comment
 
         db.current().bulkSave docs, {all_or_nothing: true}, (err,resp) ->
             console.log err
