@@ -11,29 +11,31 @@ exports.comment = new Type "comment",
 
 exports.weight = new Type "weight",
     fields:
-        date: fields.number()
+        timestamp: fields.number()
         weight: fields.number
             validators: [ validators.min 0 ]
 
 exports.length = new Type "length",
     fields:
-        date: fields.number()
+        timestamp: fields.number()
         length: fields.number
             validators: [ validators.min 0 ]
 
-exports.bottle_feeding = new Type "bottle_feeding",
+exports.supplement = new Type "supplement",
     fields:
-        time: fields.number()
-        type: fields.choice
+        timestamp: fields.number()
+        supplement_type: fields.choice
             values: [
                 ["formula", "Formula Milk"],
                 ["human", "Human Milk"],
                 ["other", "Other"]
             ]
+        amount: fields.number
+            validators: [validators.min 0]
 
 exports.breast_feeding = new Type "breast_feeding",
     fields:
-        startTime: fields.number()
+        timestamp: fields.number()
         duration: fields.number()
         side: fields.choice
             values: [
@@ -43,11 +45,13 @@ exports.breast_feeding = new Type "breast_feeding",
 
 exports.diaper_change = new Type "diaper_change",
     fields:
-        time: fields.number()
+        timestamp: fields.number()
         contents: fields.choice
             values: [
                 ["wet", "Wet Diaper"],
                 ["bm", "Soiled Diaper"],
                 ["both", "Both"]
             ]
+        count: fields.number
+            validators: [validators.min 0]
 
