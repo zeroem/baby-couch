@@ -8,6 +8,9 @@ module.exports = [
     from: "/tracker/"
     to: "_show/tracker"
 ,
+    from: "/feeding/"
+    to: "_show/feeding"
+,
     from: "*"
     to: "_show/not_found"
 ]
