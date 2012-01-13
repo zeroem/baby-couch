@@ -14,6 +14,7 @@ exports.Timer = class Timer extends events.EventEmitter
         if @isRunning()
             @_lastTick = setTimeout(@run_ticker,@tick_rate)
 
+    # not sure if this should trigger a "stop" event, or it's own "reset" event
     reset: () ->
         @elapsed = 0;
         @start_time = null;
@@ -131,3 +132,4 @@ exports.test = (freq = 1000) ->
         onStop: () =>
             $("#start").focus()
             $("#restart").hide()
+
