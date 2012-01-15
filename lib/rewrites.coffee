@@ -3,7 +3,7 @@ module.exports = [
     to: "static/*"
 ,
     from: "/"
-    to: "_show/welcome"
+    to: "_show/tracker"
 ,
     from: "/tracker/"
     to: "_show/tracker"
