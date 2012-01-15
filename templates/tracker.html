@@ -1,8 +1,43 @@
-<div>
-  <button>Left Breast</button>
-  <button>Right Breast</button>
-  <button>Supplement</button>
-  <button>Poops</button>
-  <button>Peeps</button>
-  <button>Missed Something?</button>
+
+<div id="tracker_ui">
+  <div id="flash"></div>
+  <div>
+    <button id="left" type="button">Left</button>
+    <button id="right" type="button">Right</button>
+    <div class="clear" />
+  </div>
+  <div>
+    <button id="supplement" type="button">Supplement</button>
+  </div>
+
+  <div>
+    <button id="bm" type="button">Poops</button>
+    <button id="wet" type="button">Peeps</button>
+    <div class="clear" />
+  </div>
+  <button id="missed" type="button">Missed Something?</button>
 </div>
+
+<div id="timer_wrapper" style="display: none">
+  <div id="timer">
+    <form>
+      <input type="hidden" id="side" name="side" />
+
+      <h1 id="display">00:00:00.0</h1>
+
+      <div class="buttons">
+        <button type="button" autofocus="autofocus" id="start">start</button>
+        <button type="button" id="pause">pause</button>
+        <button type="button" id="reset">reset</button>
+      </div>
+
+      <div>
+        <textarea id="comment" name="comment" placeholder="Anything worth noting...?" rows="4" cols="40"></textarea>
+      </div>
+
+      <button id="timer_done" type="button">Done</button>
+      <button id="timer_cancel" type="button">Cancel</button>
+    </form>
+  </div>
+</div>
+<script src="{{baseURL}}/static/js/tracker.js"></script>
