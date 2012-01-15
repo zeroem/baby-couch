@@ -1,8 +1,31 @@
+.hidden {
+    display: none;
+}
+
+#flash {
+    font-size: 18pt;
+}
+
+#flash.good {
+    background-color: lightgreen;
+}
+
+#flash.bad {
+    background-color: lightred;
+}
 
 button {
     width: 48%;
     margin: 5px auto;
     font-size: 32pt;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
 }
 
 .clear {
@@ -12,14 +35,6 @@ button {
 #tracker_ui {
     margin: 5px auto;
     width: 400px;
-}
-
-#tracker_ui #left, #tracker_ui #bm {
-    float: left;
-}
-
-#tracker_ui #right, #tracker_ui #wet {
-    float: right;
 }
 
 #tracker_ui #missed, #tracker_ui #supplement {
@@ -33,12 +48,23 @@ button {
 }
 */
 
+#timer {
+    position: relative;
+}
+
 #timer h1 {
-    font-size: 32pt;
+    font-size: 40pt;
     margin: 5px;
     text-align: center;
 }
 
-#timer .buttons {
+#timer textarea {
+    width: 90%;
+    margin: 5px auto;
+}
+
+#timer button {
     text-align: center;
+    font-size: 16pt;
+    width: 30%;
 }

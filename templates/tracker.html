@@ -1,21 +1,23 @@
 
 <div id="tracker_ui">
-  <div id="flash"></div>
+  <div id="flash">&nbsp;</div>
   <div>
-    <button id="left" type="button">Left</button>
-    <button id="right" type="button">Right</button>
+    <button id="left" class="left" type="button">Left</button>
+    <button id="right" class="right" type="button">Right</button>
     <div class="clear" />
   </div>
-  <div>
+  <div class="hidden">
     <button id="supplement" type="button">Supplement</button>
   </div>
 
   <div>
-    <button id="bm" type="button">Poops</button>
-    <button id="wet" type="button">Peeps</button>
+    <button id="bm" class="left" type="button">Poops</button>
+    <button id="wet" class="right" type="button">Peeps</button>
     <div class="clear" />
   </div>
-  <button id="missed" type="button">Missed Something?</button>
+  <div class="hidden">
+    <button id="missed" type="button">Missed Something?</button>
+  </div>
 </div>
 
 <div id="timer_wrapper" style="display: none">

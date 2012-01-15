@@ -1,5 +1,6 @@
 timer = require "utils/timer"
 db = require "db"
+doc_template = require "lib/docs"
 
 te = null
 
@@ -13,8 +14,19 @@ $ () ->
     $("#right").click () ->
         pop_timer "right"
 
+    $("#bm").click () ->
+        db.current().saveDoc(doc_template.diaper_change(Date.now(),"bm",1), (err,resp) ->
+            flash("Poops Saved")
+        )
+
+    $("#wet").click () ->
+        db.current().saveDoc(doc_template.diaper_change(Date.now(),"wet",1), (err,resp) ->
+            flash("Peeps Saved")
+        )
+
 pop_timer = (side) ->
     get_timer().reset()
+    get_timer().run_ticker()
     te.find("#side").val(side)
 
     $.colorbox
@@ -45,17 +57,19 @@ init_timer = () ->
 
         docs = []
         now = Date.now()
-        msg = "Breast Feeding Saved"
+        msg = ucfirst(get_side()) + " Breast Feeding"
 
-        docs.push(breast_feeding now, get_side(), get_elapsed_time())
+        docs.push(doc_template.breast_feeding(now, get_side(), get_elapsed_time()))
 
         if get_timer_comment().trim().length > 0
-            docs.push(comment now, get_timer_comment())
-            msg = "Breast Feeding and Comment Saved"
+            docs.push(doc_template.comment(now, get_timer_comment()))
+            msg += " and Comment"
 
-        db.current().bulkSave(docs, (err, resp) ->
-            close_colorbox_flash_func msg
-        )
+        msg += " Saved."
+        db.current().bulkSave(docs, close_colorbox_flash_func(msg))
+
+    te.find("#timer_cancel").click () ->
+        $.colorbox.close()
 
 
 get_elapsed_time = () ->
@@ -76,27 +90,15 @@ get_timer_comment = () ->
 close_colorbox_flash_func = (msg) ->
     (err, resp) ->
         $.colorbox.close()
-        $("#flash").html(msg)
+        flash(msg)
 
-breast_feeding = (timestamp, side, duration) ->
-    type: "breast_feeding"
-    timestamp: timestamp
-    side: side
-    duration: duration
+flash = (msg,good=true) ->
+    flash_element = $("#flash")
+    flash_element.html(msg)
 
-supplement = (timestamp,amount,supplement_type="formula") ->
-    type: "supplement"
-    timestamp: timestamp
-    amount: amount
-    supplement_type: supplement_type
-
-diaper_change = (timestamp, type, count) ->
-    type: "diaper_change"
-    timestamp: timestamp
-    count: count
-    contents: type
-
-comment = (timestamp, comment) ->
-    type: "comment"
-    timestamp: timestamp
-    text: comment
+    if good
+        flash_element.addClass "good"
+        flash_element.removeClass "bad"
+    else
+        flash_element.addClass "bad"
+        flash_element.removeClass "good"
