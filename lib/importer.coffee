@@ -36,8 +36,8 @@ exports.import = (path) ->
             if row.Wet.length
                 docs.push(doc_template.diaper_change(timestamp, "wet", parseInt row.Wet))
 
-            if row.Comment.length
-                docs.push(doc_template.comment(timestamp, row.Comment))
+            if row.Comments.length
+                docs.push(doc_template.comment(timestamp, row.Comments))
 
         db.current().bulkSave docs, {all_or_nothing: true}, (err,resp) ->
             console.log err
