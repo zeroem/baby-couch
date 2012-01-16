@@ -1,22 +1,19 @@
 exports.breast_feeding =
     map: (doc) ->
-        if is_type doc, "breast_feeding"
+        if doc.type == "breast_feeding"
             emit doc.timestamp, doc
 
 exports.diaper_change =
     map: (doc) ->
-        if is_type doc, "diaper_change"
+        if doc.type == "diaper_change"
             emit doc.timestamp, doc
 
 exports.comment =
     map: (doc) ->
-        if is_type doc, "comment"
+        if doc.type == "comment"
             emit doc.timestamp, doc
 
 exports.supplement =
     map: (doc) ->
-        if is_type doc, "supplement"
+        if doc.type == "supplement"
             emit doc.timestamp, doc
-
-is_type = (doc,type) ->
-    doc.type? and doc.type == type
