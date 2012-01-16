@@ -5,7 +5,7 @@ validators = require("couchtypes/validators")
 
 exports.comment = new Type "comment",
     fields:
-        date: fields.number()
+        timestamp: fields.number()
         text: fields.string
             widget: widgets.textarea({cols: 40, rows: 7})
 
