@@ -25,9 +25,10 @@ exports.Timer = class Timer extends events.EventEmitter
         @run_ticker() if was_not_running
 
     start: () ->
-        if @start_time == null
+        @emit "start", @
+
+        if @isStopped()
             @start_time = new Date().getTime()
-            @emit "start", @
             @run_ticker()
 
         @start_time
