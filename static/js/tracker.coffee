@@ -149,7 +149,7 @@ snippet(doc) ->
     message
 
 
-age(timestamp)
+age = (timestamp) ->
     elapsed = new timer.Elapsed(Date.now() - timestamp)
     time = ""
 
