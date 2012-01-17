@@ -1,0 +1,5 @@
+* Convert GUI to using jquery-mobile
+* Separate the Feeding Timer and Comment Forms into their own pages
+* Implement generic "missed something" functionality
+   allows users to add entries for events occurring when
+   application is not available
