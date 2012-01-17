@@ -7,6 +7,7 @@ te = null
 $ () ->
     te = $ "#timer"
     init_timer()
+    init_comment()
 
     $("#left").click () ->
         pop_timer "left"
@@ -24,20 +25,30 @@ $ () ->
             flash("Peeps Saved")
         )
 
+    $("[name=cancel]").click () ->
+        $.colorbox.close()
+
 pop_timer = (side) ->
     get_timer().reset()
     get_timer().run_ticker()
     te.find("#side").val(side)
 
-    $.colorbox
-        inline: true
+    open_colorbox
         href: "#timer"
         title: ucfirst(side) + " Breast"
-        escKey: false
-        overlayClose: false
         onComplete: () ->
             te.find("#start").focus()
 
+open_colorbox = (user) ->
+    opts =
+        inline: true
+        overlayClose: false
+        transition: "none"
+
+    for own name, value of user
+        opts[name] = value
+
+    $.colorbox opts
 
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
@@ -55,22 +66,23 @@ init_timer = () ->
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
 
-        docs = []
-        now = Date.now()
-        msg = ucfirst(get_side()) + " Breast Feeding"
+        db.current().saveDoc(
+            doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()),
+            close_colorbox_flash_func "Feeding Saved"
+        )
 
-        docs.push(doc_template.breast_feeding(now, get_side(), get_elapsed_time()))
+init_comment = () ->
+    $("#comment").click () ->
+        $("#comment_text").val("")
 
-        if get_timer_comment().trim().length > 0
-            docs.push(doc_template.comment(now, get_timer_comment()))
-            msg += " and Comment"
+        open_colorbox
+            title: "Comments"
+            href:  "#comment_form"
 
-        msg += " Saved."
-        db.current().bulkSave(docs, close_colorbox_flash_func(msg))
-
-    te.find("#timer_cancel").click () ->
-        $.colorbox.close()
-
+    $("#comment_done").click () ->
+        db.current().saveDoc(
+            doc_template.comment(Date.now(), get_comment()), close_colorbox_flash_func "Comment Saved"
+        )
 
 get_elapsed_time = () ->
     Math.floor(get_timer().elapsed / 1000)
@@ -84,8 +96,8 @@ get_side = () ->
 get_timer = () ->
     te.data("timer_ui")._timer
 
-get_timer_comment = () ->
-    te.find("#comment").val()
+get_comment = () ->
+    $("#comment_text").val()
 
 close_colorbox_flash_func = (msg) ->
     (err, resp) ->

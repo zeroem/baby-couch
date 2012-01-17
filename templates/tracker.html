@@ -2,21 +2,21 @@
 <div id="tracker_ui">
   <div id="flash">&nbsp;</div>
   <div>
-    <button id="left" class="left" type="button">Left</button>
-    <button id="right" class="right" type="button">Right</button>
+    <button id="left" class="left two-up" type="button">Left</button>
+    <button id="right" class="right two-up" type="button">Right</button>
     <div class="clear" />
   </div>
-  <div class="hidden">
+  <div class="hidden wide-button">
     <button id="supplement" type="button">Supplement</button>
   </div>
 
   <div>
-    <button id="bm" class="left" type="button">Poops</button>
-    <button id="wet" class="right" type="button">Peeps</button>
+    <button id="bm" class="left two-up" type="button">Poops</button>
+    <button id="wet" class="right two-up" type="button">Peeps</button>
     <div class="clear" />
   </div>
-  <div class="hidden">
-    <button id="missed" type="button">Missed Something?</button>
+  <div>
+    <button id="comment" class="wide-button" type="button">Comments?</button>
   </div>
 </div>
 
@@ -28,18 +28,26 @@
       <h1 id="display">00:00:00.0</h1>
 
       <div class="buttons">
-        <button type="button" autofocus="autofocus" id="start">start</button>
-        <button type="button" id="pause">pause</button>
-        <button type="button" id="reset">reset</button>
+        <button class="three-up" type="button" autofocus="autofocus" id="start">start</button>
+        <button class="three-up" type="button" id="pause">pause</button>
+        <button class="three-up" type="button" id="reset">reset</button>
       </div>
 
-      <div>
-        <textarea id="comment" name="comment" placeholder="Anything worth noting...?" rows="4" cols="40"></textarea>
-      </div>
-
-      <button id="timer_done" type="button">Done</button>
-      <button id="timer_cancel" type="button">Cancel</button>
+      <button class="two-up" id="timer_done" type="button">Done</button>
+      <button class="two-up" name="cancel" type="button">Cancel</button>
     </form>
   </div>
 </div>
+
+<div id="comment_wrapper" class="hidden">
+  <div id="comment_form">
+    <div>
+      <textarea id="comment_text" name="comment" placeholder="Anything worth noting...?" rows="4" cols="40"></textarea>
+    </div>
+
+    <button id="comment_done" type="button">Done</button>
+    <button name="cancel" type="button">Cancel</button>
+  </div>
+</div>
+
 <script src="{{baseURL}}/static/js/tracker.js"></script>

@@ -1,3 +1,26 @@
+input {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+    border-radius: 0;
+}
+
+button {
+    width: 48%;
+    margin: 5px auto;
+    font-size: 24pt;
+    padding: 2px;
+}
+
+#timer button {
+    font-size: 100%;
+}
+
+#timer h1 {
+    font-size: 40pt;
+    margin: 5px;
+    text-align: center;
+}
+
 .hidden {
     display: none;
 }
@@ -14,11 +37,6 @@
     background-color: lightred;
 }
 
-button {
-    width: 48%;
-    margin: 5px auto;
-    font-size: 32pt;
-}
 
 .left {
     float: left;
@@ -34,37 +52,22 @@ button {
 
 #tracker_ui {
     margin: 5px auto;
-    width: 400px;
-}
-
-#tracker_ui #missed, #tracker_ui #supplement {
     width: 100%;
 }
 
-/*
-#timer {
-    width: 350px;
-    height: 200px
-}
-*/
-
-#timer {
-    position: relative;
+.wide-button {
+    width: 100%;
 }
 
-#timer h1 {
-    font-size: 40pt;
-    margin: 5px;
-    text-align: center;
+.one-up {
+    width: 100%;
 }
 
-#timer textarea {
-    width: 90%;
-    margin: 5px auto;
+.two-up {
+    width: 48%;
 }
 
-#timer button {
-    text-align: center;
-    font-size: 16pt;
-    width: 30%;
+.three-up {
+    width: 31%
 }
+
