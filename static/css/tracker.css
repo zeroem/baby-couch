@@ -1,32 +1,5 @@
-input {
-    -webkit-appearance: none;
-    -webkit-border-radius: 0px;
-    border-radius: 0;
-}
-
-button {
-    width: 48%;
-    margin: 5px auto;
-    font-size: 24pt;
-    padding: 2px;
-}
-
-#timer button {
-    font-size: 100%;
-}
-
-#timer h1 {
-    font-size: 40pt;
-    margin: 5px;
-    text-align: center;
-}
-
 .hidden {
     display: none;
-}
-
-#flash {
-    font-size: 18pt;
 }
 
 .transition {
@@ -36,46 +9,3 @@ button {
     -ms-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
 }
-
-#flash.good {
-    background-color: lightgreen;
-}
-
-#flash.bad {
-    background-color: lightred;
-}
-
-
-.left {
-    float: left;
-}
-
-.right {
-    float: right;
-}
-
-.clear {
-    clear: both;
-}
-
-#tracker_ui {
-    margin: 5px auto;
-    width: 100%;
-}
-
-.wide-button {
-    width: 100%;
-}
-
-.one-up {
-    width: 100%;
-}
-
-.two-up {
-    width: 48%;
-}
-
-.three-up {
-    width: 31%
-}
-

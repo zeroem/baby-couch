@@ -106,19 +106,21 @@ close_colorbox_flash_func = (msg) ->
 
 flash = (msg,good=true) ->
     flash_element = $("#flash")
-    flash_element.html(msg)
+    flash_message = $("#flash_message")
+
+    flash_message.html(msg)
     flash_element.removeClass "transition"
 
     if good
-        flash_element.addClass "good"
-        flash_element.removeClass "bad"
+        flash_element.addClass "ui-bar-b"
+        flash_element.removeClass "ui-bar-e"
         # fade out the background after a few seconds
         setTimeout(
             () ->
                 flash_element.addClass "transition"
-                flash_element.removeClass "good",
+                flash_element.removeClass "ui-bar-b",
             2000
         )
     else
-        flash_element.addClass "bad"
-        flash_element.removeClass "good"
+        flash_element.addClass "ui-bar-e"
+        flash_element.removeClass "ui-bar-b"
