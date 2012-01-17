@@ -16,8 +16,13 @@ exports.Timer = class Timer extends events.EventEmitter
 
     # not sure if this should trigger a "stop" event, or it's own "reset" event
     reset: () ->
-        @elapsed = 0;
-        @start_time = null;
+        was_not_running = not @stop()
+        @elapsed = 0
+
+        # send out a tick with the zeroed out timer
+        # if the timer was already paused, the tick event
+        # wont' be running so we have to send it out manually
+        @run_ticker() if was_not_running
 
     start: () ->
         if @start_time == null
@@ -28,12 +33,13 @@ exports.Timer = class Timer extends events.EventEmitter
         @start_time
 
     stop: () ->
+        @emit "stop", @
+
         if @start_time != null
             now = new Date().getTime()
             @elapsed += (now - @start_time)
             @start_time = null;
-            @emit "stop", @
-            now
+            true
         else
             false
 
@@ -115,21 +121,3 @@ exports.TimerUI = class TimerUI
 
         if @options.autostart? and @options.autostart
             @_timer.start()
-
-
-exports.test = (freq = 1000) ->
-    new TimerUI
-        startButton: "#start"
-        stopButton:  "#pause"
-        restartButton: "#restart"
-        resetButton: "#reset"
-        tick_rate:   freq
-        onTick: (timer) ->
-            $("#display").html(timer.getElapsed().toString())
-        onStart: () =>
-            $("#pause").focus()
-            $("#restart").show()
-        onStop: () =>
-            $("#start").focus()
-            $("#restart").hide()
-
