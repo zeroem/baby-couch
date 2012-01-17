@@ -1,23 +1,19 @@
 
 <div id="tracker_ui">
   <div id="flash">&nbsp;</div>
-  <div>
-    <button id="left" class="left two-up" type="button">Left</button>
-    <button id="right" class="right two-up" type="button">Right</button>
-    <div class="clear" />
+  <div data-role="controlgroup" data-type="horizontal">
+    <button id="left" type="button">Left</button>
+    <button id="right" type="button">Right</button>
   </div>
-  <div class="hidden wide-button">
+  <div style="display: none;" class="wide-button">
     <button id="supplement" type="button">Supplement</button>
   </div>
 
-  <div>
-    <button id="bm" class="left two-up" type="button">Poops</button>
-    <button id="wet" class="right two-up" type="button">Peeps</button>
-    <div class="clear" />
+  <div data-role="controlgroup" data-type="horizontal">
+    <button id="bm" type="button">Poops</button>
+    <button id="wet" type="button">Peeps</button>
   </div>
-  <div>
-    <button id="comment" class="wide-button" type="button">Comments?</button>
-  </div>
+  <button id="comment" type="button">Comments?</button>
 </div>
 
 <div id="timer_wrapper" style="display: none">
@@ -39,7 +35,7 @@
   </div>
 </div>
 
-<div id="comment_wrapper" class="hidden">
+<div id="comment_wrapper" style="display: none;">
   <div id="comment_form">
     <div>
       <textarea id="comment_text" name="comment" placeholder="Anything worth noting...?" rows="4" cols="40"></textarea>
