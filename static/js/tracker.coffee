@@ -124,3 +124,54 @@ flash = (msg,good=true) ->
     else
         flash_element.addClass "ui-bar-e"
         flash_element.removeClass "ui-bar-b"
+
+
+update_lasts = () =>
+
+    setTimeout update_lasts, 60000
+
+
+snippet(doc) ->
+    message = ""
+
+    if doc.type == "breast_feeding"
+        message = "Feeding"
+
+        if side == "left"
+            message += "(L)"
+        else
+            message += "(R)"
+
+        message += ": " + age(doc.timestamp)
+    else if doc.type="diaper_change"
+        message = "Change: " + age(doc.timestamp)
+
+    message
+
+
+age(timestamp)
+    elapsed = new timer.Elapsed(Date.now() - timestamp)
+    time = ""
+
+    if elapsed.hour > 24
+        days = Math.floor(elapsed.hour/24) + "."
+        remainder = elapsed.hour % 24
+
+        if remainder > 18
+            days++
+        else if remainder > 8
+            days += .5
+
+        time = days + " days"
+    else if elapsed.hour > 0
+        hours = elapsed.hour
+        if hours < 6
+            if minutes > 50
+                hours++
+            else if minutes > 20
+                hours += .5
+        time = hours + " hours"
+    else
+        time = (Math.floor(elapsed.minutes/15) * 15) + " minutes"
+
+    time += " ago"
