@@ -123,7 +123,7 @@ snippet = (doc) ->
     if doc.type == "breast_feeding"
         message = "Feeding"
 
-        if side == "left"
+        if doc.side == "left"
             message += "(L)"
         else
             message += "(R)"
