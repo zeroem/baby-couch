@@ -130,10 +130,10 @@ flash = (msg,good=true) ->
 update_most_recent = () =>
     db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
         text = ""
-        messages = for type, doc of resp.rows[0].value
-            snippet(doc)
+        for type, doc of resp.rows[0].value
+            text += "<li>" + snippet(doc) + "</li>"
 
-        $("#most_recent_content").html(messages.join(", "));
+        $("#most_recent_content").html(text);
 
         setTimeout update_most_recent, 60000
     )
@@ -179,7 +179,9 @@ age = (timestamp) ->
             else if minutes > 20
                 hours += .5
         time = hours + " hours"
-    else
+    else if elapsed.minute > 15
         time = (Math.floor(elapsed.minutes/15) * 15) + " minutes"
+    else
+        time = "< 15 minutes"
 
     time += " ago"
