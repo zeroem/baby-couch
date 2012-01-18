@@ -1,7 +1,7 @@
 timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
-
+last_document_id = null
 
 te = null
 
@@ -26,12 +26,25 @@ $ () ->
     $("[name=cancel]").click () ->
         $.colorbox.close()
 
+    $("#undo").click () ->
+        if last_document_id?
+            db.current().removeDoc(last_document_id, (err, resp)->
+                if not err?
+                    last_document_id = null
+                    $("#undo").hide()
+            )
+
 
 save_document = (doc) ->
     $.mobile.showPageLoadingMsg()
     db.current().saveDoc(doc, (err,resp) ->
         $.mobile.hidePageLoadingMsg()
-        update_most_recent(true)
+
+        if not err?
+            update_most_recent(true)
+            last_document_id = resp._id
+        else
+            # do something with the error?
     )
 
 
@@ -106,11 +119,15 @@ get_comment = () ->
 
 update_most_recent = (once=false) =>
     db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
-        text = ""
-        for type, doc of resp.rows[0].value
-            text += "<li>" + snippet(doc) + "</li>"
 
-        $("#most_recent_content").html(text);
+        if not err?
+            text = ""
+            for type, doc of resp.rows[0].value
+                text += "<li>" + snippet(doc) + "</li>"
+
+            $("#most_recent_content").html(text);
+        else
+            # do something with the error?
 
         if not once
             setTimeout update_most_recent, 60000
