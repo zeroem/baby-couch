@@ -18,17 +18,22 @@ $ () ->
         pop_timer "right"
 
     $("#bm").click () ->
-        db.current().saveDoc(doc_template.diaper_change(Date.now(),"bm",1), (err,resp) ->
-            flash("Poops Saved")
-        )
+        save_document(doc_template.diaper_change(Date.now(),"bm",1))
 
     $("#wet").click () ->
-        db.current().saveDoc(doc_template.diaper_change(Date.now(),"wet",1), (err,resp) ->
-            flash("Peeps Saved")
-        )
+        save_document(doc_template.diaper_change(Date.now(),"wet",1))
 
     $("[name=cancel]").click () ->
         $.colorbox.close()
+
+
+save_document = (doc) ->
+    $.mobile.showPageLoadingMsg()
+    db.current().saveDoc(doc, (err,resp) ->
+        $.mobile.hidePageLoadingMsg()
+        update_most_recent(true)
+    )
+
 
 pop_timer = (side) ->
     get_timer().reset()
@@ -67,11 +72,9 @@ init_timer = () ->
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
+        save_document(doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()))
+        $.colorbox.close()
 
-        db.current().saveDoc(
-            doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()),
-            close_colorbox_flash_func "Feeding Saved"
-        )
 
 init_comment = () ->
     $("#comment").click () ->
@@ -82,9 +85,8 @@ init_comment = () ->
             href:  "#comment_form"
 
     $("#comment_done").click () ->
-        db.current().saveDoc(
-            doc_template.comment(Date.now(), get_comment()), close_colorbox_flash_func "Comment Saved"
-        )
+        save_document(doc_template.comment(Date.now(), get_comment()))
+        $.colorbox.close()
 
 get_elapsed_time = () ->
     Math.floor(get_timer().elapsed / 1000)
@@ -100,33 +102,6 @@ get_timer = () ->
 
 get_comment = () ->
     $("#comment_text").val()
-
-close_colorbox_flash_func = (msg) ->
-    (err, resp) ->
-        $.colorbox.close()
-        flash(msg)
-        #update_most_recent(true)
-
-flash = (msg,good=true) ->
-    flash_element = $("#flash")
-    flash_message = $("#flash_message")
-
-    flash_message.html(msg)
-    flash_element.removeClass "transition"
-
-    if good
-        flash_element.addClass "ui-bar-b"
-        flash_element.removeClass "ui-bar-e"
-        # fade out the background after a few seconds
-        setTimeout(
-            () ->
-                flash_element.addClass "transition"
-                flash_element.removeClass "ui-bar-b",
-            2000
-        )
-    else
-        flash_element.addClass "ui-bar-e"
-        flash_element.removeClass "ui-bar-b"
 
 
 update_most_recent = (once=false) =>
