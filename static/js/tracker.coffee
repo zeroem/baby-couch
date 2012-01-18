@@ -8,6 +8,7 @@ $ () ->
     te = $ "#timer"
     init_timer()
     init_comment()
+    update_most_recent()
 
     $("#left").click () ->
         pop_timer "left"
@@ -126,12 +127,19 @@ flash = (msg,good=true) ->
         flash_element.removeClass "ui-bar-b"
 
 
-update_lasts = () =>
+update_most_recent = () =>
+    db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
+        text = ""
+        messages = for type, doc of resp.rows[0].value
+            snippet(doc)
 
-    setTimeout update_lasts, 60000
+        $("#most_recent_content").html(messages.join(", "));
+
+        setTimeout update_most_recent, 60000
+    )
 
 
-snippet(doc) ->
+snippet = (doc) ->
     message = ""
 
     if doc.type == "breast_feeding"
