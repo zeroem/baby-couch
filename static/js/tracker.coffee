@@ -2,6 +2,7 @@ timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
 
+
 te = null
 
 $ () ->
@@ -104,6 +105,7 @@ close_colorbox_flash_func = (msg) ->
     (err, resp) ->
         $.colorbox.close()
         flash(msg)
+        #update_most_recent(true)
 
 flash = (msg,good=true) ->
     flash_element = $("#flash")
@@ -127,7 +129,7 @@ flash = (msg,good=true) ->
         flash_element.removeClass "ui-bar-b"
 
 
-update_most_recent = () =>
+update_most_recent = (once=false) =>
     db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
         text = ""
         for type, doc of resp.rows[0].value
@@ -135,7 +137,8 @@ update_most_recent = () =>
 
         $("#most_recent_content").html(text);
 
-        setTimeout update_most_recent, 60000
+        if not once
+            setTimeout update_most_recent, 60000
     )
 
 
