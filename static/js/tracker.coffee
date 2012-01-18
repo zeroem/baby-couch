@@ -177,13 +177,13 @@ age = (timestamp) ->
     else if elapsed.hour > 0
         hours = elapsed.hour
         if hours < 6
-            if minutes > 50
+            if elapsed.min > 50
                 hours++
-            else if minutes > 20
+            else if elapsed.min > 20
                 hours += .5
         time = hours + " hours"
-    else if elapsed.minute => 15
-        time = (Math.floor(elapsed.minutes/15) * 15) + " minutes"
+    else if elapsed.min >= 15
+        time = (Math.floor(elapsed.min/15) * 15) + " minutes"
     else
         time = "< 15 minutes"
 
