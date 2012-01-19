@@ -19,6 +19,11 @@ exports.supplement =
         if doc.type == "supplement"
             emit doc.timestamp, doc
 
+exports.timeline =
+    map: (doc) ->
+        if doc.type?
+            emit doc.timestamp, doc
+
 exports.most_recent =
     map: (doc) ->
         most_recent_list =
