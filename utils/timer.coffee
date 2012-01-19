@@ -4,6 +4,7 @@ exports.Timer = class Timer extends events.EventEmitter
     elapsed: 0
     start_time: null
     tick_rate: 100
+    stop_time: null
 
     constructor: (@tick_rate=100) ->
         super()
@@ -29,6 +30,7 @@ exports.Timer = class Timer extends events.EventEmitter
 
         if @isStopped()
             @start_time = new Date().getTime()
+            @stop_time = null
             @run_ticker()
 
         @start_time
@@ -38,6 +40,7 @@ exports.Timer = class Timer extends events.EventEmitter
 
         if @start_time != null
             now = new Date().getTime()
+            @stop_time = now
             @elapsed += (now - @start_time)
             @start_time = null;
             true

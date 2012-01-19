@@ -1,7 +1,7 @@
 timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
-last_document_id = null
+last_document = null
 
 te = null
 
@@ -27,13 +27,20 @@ $ () ->
         $.colorbox.close()
 
     $("#undo").click () ->
-        if last_document_id?
-            db.current().removeDoc(last_document_id, (err, resp)->
+        console.log "here"
+        if last_document?
+            $.mobile.showPageLoadingMsg()
+            db.current().removeDoc(last_document, (err, resp)->
+                $.mobile.hidePageLoadingMsg()
                 if not err?
-                    last_document_id = null
-                    $("#undo").hide()
+                    clear_undo()
+                    update_most_recent()
             )
 
+
+clear_undo = () ->
+    last_document = null
+    $("#undo").hide()
 
 save_document = (doc) ->
     $.mobile.showPageLoadingMsg()
@@ -42,7 +49,12 @@ save_document = (doc) ->
 
         if not err?
             update_most_recent(true)
-            last_document_id = resp._id
+            last_document =
+                _id: resp.id
+                _rev: resp.rev
+
+            $("#undo").show()
+            setTimeout(clear_undo, 30*1000)
         else
             # do something with the error?
     )
@@ -85,7 +97,7 @@ init_timer = () ->
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
-        save_document(doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()))
+        save_document(doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()))
         $.colorbox.close()
 
 
