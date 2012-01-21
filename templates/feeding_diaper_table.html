@@ -1,13 +1,34 @@
+{{#each days}}
 <table>
-  {{#each days}}
-    {{#each this}}
+  <thead>
+    <tr>
+      <th>{{this.date}}</th>
+    </tr>
+    <tr>
+      <th>Hour</th>
+      <th>Left</th>
+      <th>Right</th>
+      <th>Wet</th>
+      <th>BM</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this.hours}}
       <tr>
-        <td>{{left}}</td>
-        <td>{{right}}</td>
-        <td>{{wet}}</td>
-        <td>{{bm}}</td>
-        <td>{{comment}}</td>
+        <td>{{this.hour}}</td>
+        <td>{{this.left}}</td>
+        <td>{{this.right}}</td>
+        <td>{{this.wet}}</td>
+        <td>{{this.bm}}</td>
+        <td>
+          {{#each this.comments}}
+            {{this}}
+            <br />
+          {{/each}}
+        </td>
       </tr>
     {{/each}}
-  {{/each}}
+  </tbody>
 </table>
+{{/each}}

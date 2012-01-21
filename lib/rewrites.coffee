@@ -5,6 +5,9 @@ module.exports = [
     from: "/"
     to: "_show/tracker"
 ,
+    from: "/chart"
+    to: "_list/chart/timeline"
+,
     from: "/tracker/"
     to: "_show/tracker"
 ,
