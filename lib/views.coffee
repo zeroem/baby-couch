@@ -37,7 +37,11 @@ exports.most_recent =
         result = {}
 
         process = (doc,result) ->
-            type = doc.type
+
+            if doc.type == "diaper_change"
+                type = doc.contents
+            else
+                type = doc.type
 
             if not result[type]?
                 result[type] = doc
