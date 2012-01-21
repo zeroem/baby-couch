@@ -2,6 +2,7 @@ timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
 last_document = null
+templates = require "duality/templates"
 
 te = null
 
@@ -133,11 +134,13 @@ update_most_recent = (once=false) =>
     db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
 
         if not err?
-            text = ""
-            for type, doc of resp.rows[0].value
-                text += "<li>" + snippet(doc) + "</li>"
+            data =
+                items: []
 
-            $("#most_recent_content").html(text);
+            for type, doc of resp.rows[0].value
+                data.items.push(snippet(doc))
+
+            $("#most_recent_content").html(templates.render("most_recent.html",{},data));
         else
             # do something with the error?
 
@@ -159,7 +162,12 @@ snippet = (doc) ->
 
         message += ": " + age(doc.timestamp)
     else if doc.type="diaper_change"
-        message = "Change: " + age(doc.timestamp)
+        if doc.contents == "bm"
+            message = "Poops: " + age(doc.timestamp)
+        else if doc.contents == "wet"
+            message = "Peeps: " + age(doc.timestamp)
+        else
+            message = "error"
 
     message
 
@@ -169,7 +177,7 @@ age = (timestamp) ->
     time = ""
 
     if elapsed.hour > 24
-        days = Math.floor(elapsed.hour/24) + "."
+        days = Math.floor(elapsed.hour/24)
         remainder = elapsed.hour % 24
 
         if remainder > 18
@@ -177,7 +185,7 @@ age = (timestamp) ->
         else if remainder > 8
             days += .5
 
-        time = days + " days"
+        time = days + "d"
     else if elapsed.hour > 0
         hours = elapsed.hour
         if hours < 6
@@ -185,10 +193,8 @@ age = (timestamp) ->
                 hours++
             else if elapsed.min > 20
                 hours += .5
-        time = hours + " hours"
-    else if elapsed.min >= 15
-        time = (Math.floor(elapsed.min/15) * 15) + " minutes"
+        time = hours + "h"
     else
-        time = "< 15 minutes"
+        time = elapsed.min + "m"
 
-    time += " ago"
+    time
