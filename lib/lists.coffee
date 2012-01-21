@@ -41,3 +41,6 @@ exports.chart = (head,req) ->
         for hour in [0..23]
             if not days[date][hour]?
                 days[date][hour] = {}
+
+    title: "Baby Tracker"
+    content: templates.render("feeding_diaper_table.html", req, {})
