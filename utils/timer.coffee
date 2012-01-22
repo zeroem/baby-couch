@@ -26,26 +26,28 @@ exports.Timer = class Timer extends events.EventEmitter
         @run_ticker() if was_not_running
 
     start: () ->
-        @emit "start", @
-
         if @isStopped()
             @start_time = new Date().getTime()
             @stop_time = null
             @run_ticker()
 
+        @emit "start", @
+
         @start_time
 
     stop: () ->
-        @emit "stop", @
-
         if @start_time != null
             now = new Date().getTime()
             @stop_time = now
             @elapsed += (now - @start_time)
             @start_time = null;
-            true
+            ret = true
         else
-            false
+            ret = false
+
+        @emit "stop", @
+        ret
+
 
     isStopped: () ->
         @start_time == null
