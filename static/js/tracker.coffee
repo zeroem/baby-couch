@@ -3,6 +3,7 @@ db = require "db"
 doc_template = require "lib/docs"
 last_document = null
 templates = require "duality/templates"
+cookies = require "cookies"
 
 te = null
 
@@ -27,6 +28,9 @@ $ () ->
     $("[name=cancel]").click () ->
         $.colorbox.close()
 
+    $("#timer [name=cancel]").click () ->
+        delete_timer_state()
+
     $("#undo").click () ->
         console.log "here"
         if last_document?
@@ -38,12 +42,15 @@ $ () ->
                     update_most_recent()
             )
 
+    if cookies.readBrowserCookie("timer_state")?
+        restore_timer_state()
+
 
 clear_undo = () ->
     last_document = null
     $("#undo").hide()
 
-save_document = (doc) ->
+save_document = (doc,fn=null) ->
     $.mobile.showPageLoadingMsg()
     db.current().saveDoc(doc, (err,resp) ->
         $.mobile.hidePageLoadingMsg()
@@ -58,6 +65,9 @@ save_document = (doc) ->
             setTimeout(clear_undo, 30*1000)
         else
             # do something with the error?
+
+        if $.isFunction fn
+            fn(err,resp)
     )
 
 
@@ -83,6 +93,49 @@ open_colorbox = (user) ->
 
     $.colorbox opts
 
+save_timer_state = () ->
+    cookies.setBrowserCookie({},
+        name: "timer_state"
+        value: JSON.stringify(
+            side: get_side()
+            timer: te.data("timer_ui")._timer
+        )
+        path: "/"
+        days: 1
+    )
+
+restore_timer_state = () ->
+    obj = JSON.parse(unescape(cookies.readBrowserCookie("timer_state")))
+
+    # bring up the timer again
+    pop_timer(obj.side)
+
+    # and restore it's state
+    _timer = get_timer()
+
+    delete obj.timer._events
+
+    for own key, value of obj.timer
+        _timer[key] = value
+
+    # the 'tick' event may not be running if we just reloaded the page
+    # so, if we're in a 'running' state, make sure the ticker is also going
+    #
+    # need to figure out why this needs to be so complicated, I should be able
+    # to just 'run_ticker' and be done with it
+    if _timer.isRunning()
+        _timer.stop()
+        _timer.start()
+    else
+        _timer.run_ticker()
+
+delete_timer_state = () ->
+    cookies.setBrowserCookie {},
+    name: "timer_state"
+    value: ""
+    path: "/"
+    days: -2
+
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
         startButton: te.find "#start"
@@ -93,12 +146,18 @@ init_timer = () ->
             te.find("#display").html(get_timer().getElapsed().toString())
         onStart: () ->
             te.find("#pause").focus()
+            save_timer_state()
         onStop: () ->
             te.find("#start").focus()
+            save_timer_state()
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
-        save_document(doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()))
+        save_document(
+            doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
+            (err,resp) ->
+                delete_timer_state()
+        )
         $.colorbox.close()
 
 
