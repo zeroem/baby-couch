@@ -13,12 +13,6 @@ $ () ->
     init_comment()
     update_most_recent()
 
-    #$("#left").click () ->
-    #    pop_timer "left"
-
-    #$("#right").click () ->
-    #    pop_timer "right"
-
     $("#bm").click () ->
         save_document(doc_template.diaper_change(Date.now(),"bm",1))
 
@@ -176,11 +170,6 @@ init_timer = () ->
             (err,resp) ->
                 delete_timer_state()
         )
-<<<<<<< HEAD
-=======
-        $.colorbox.close()
-
->>>>>>> master
 
 init_comment = () ->
     $("#comment").click () ->
