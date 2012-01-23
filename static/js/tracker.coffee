@@ -35,29 +35,6 @@ save_document = (doc) ->
     )
 
 
-<<<<<<< Updated upstream
-pop_timer = (side) ->
-    get_timer().reset()
-    get_timer().run_ticker()
-    te.find("#side").val(side)
-
-    open_colorbox
-        href: "#timer"
-        title: ucfirst(side) + " Breast"
-        onComplete: () ->
-            te.find("#start").focus()
-
-open_colorbox = (user) ->
-    opts =
-        inline: true
-        overlayClose: false
-        transition: "none"
-
-    for own name, value of user
-        opts[name] = value
-
-    $.colorbox opts
-=======
 save_timer_state = () ->
     cookies.setBrowserCookie({},
         name: "timer_state"
@@ -97,7 +74,6 @@ delete_timer_state = () ->
     value: ""
     path: "/"
     days: -2
->>>>>>> Stashed changes
 
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
@@ -114,18 +90,11 @@ init_timer = () ->
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
-<<<<<<< Updated upstream
-        save_document(doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()))
-        $.colorbox.close()
-=======
         save_document(
             doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
             (err,resp) ->
                 delete_timer_state()
         )
-
->>>>>>> Stashed changes
-
 
 init_comment = () ->
     $("#comment").click () ->
