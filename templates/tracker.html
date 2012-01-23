@@ -1,19 +1,30 @@
+<div id="one" data-role="page">
+  <header data-role="header">
+    <h1>{{title}}</h1>
+  </header>
+  <div data-role="content" id="tracker_ui">
+    <fieldset class="ui-grid-a">
+      <div class="ui-block-a"><a data-role="button" href="#two" id="left">Left</a></div>
+      <div class="ui-block-b"><a data-role="button" href="#two" id="right">Right</a></div>
+    </fieldset>
+    <div style="display: none;" class="wide-button">
+      <a id="supplement">Supplement</a>
+    </div>
 
-<div id="tracker_ui">
-  <fieldset class="ui-grid-a">
-    <div class="ui-block-a"><button id="left" type="button">Left</button></div>
-    <div class="ui-block-b"><button id="right" type="button">Right</button></div>
-  </fieldset>
-  <div style="display: none;" class="wide-button">
-    <button id="supplement" type="button">Supplement</button>
+    <fieldset class="ui-grid-a">
+      <div class="ui-block-a"><button type="button" id="bm">Poops</button></div>
+      <div class="ui-block-b"><button type="button" id="wet">Peeps</button></div>
+    </fieldset>
+    <a data-role="button" href="#three" id="comment">Comments?</a>
+
+    <div id="most_recent">
+      <h3>Latest:</h3>
+      <div id="most_recent_content">&nbsp;</div>
+    </div>
   </div>
+</div>
 
-  <fieldset class="ui-grid-a">
-    <div class="ui-block-a"><button id="bm" type="button">Poops</button></div>
-    <div class="ui-block-b"><button id="wet" type="button">Peeps</button></div>
-  </fieldset>
-  <button id="comment" type="button">Comments?</button>
-
+<<<<<<< Updated upstream
   <div id="most_recent">
     <h3>Latest:</h3>
     <ul id="most_recent_content">&nbsp;</ul>
@@ -40,15 +51,27 @@
     </form>
   </div>
 </div>
-
-<div id="comment_wrapper" style="display: none;">
-  <div id="comment_form">
-    <div data-role="fieldcontain">
-      <textarea id="comment_text" name="comment" placeholder="Anything worth noting...?"></textarea>
-    </div>
-    <div class="ui-block-a"><button data-theme="b" id="comment_done" type="button">Done</button></div>
-    <div class="ui-block-b"><button name="cancel" type="button">Cancel</button></div>
+=======
+<div data-role="page" id="two">
+  <header data-role="header">
+    <h1>Feeding Timer</h1>
+  </header>
+  <div data-role="content" id="timer_wrapper">
+    {{#include "timer.html"}}{{/include}}
   </div>
 </div>
+
+>>>>>>> Stashed changes
+
+<div data-role="page" id="three">
+  <header data-role="header">
+    <h1>Comments</h1>
+  </header>
+  <div data-role="content" id="comment_wrapper">
+    {{#include "comment_form.html"}}{{/include}}
+  </div>
+</div>
+
+
 
 <script src="{{baseURL}}/static/js/tracker.js"></script>

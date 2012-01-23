@@ -6,8 +6,12 @@ exports.welcome = (doc, req) ->
     content: templates.render("welcome.html", req, {})
 
 exports.tracker = (doc, req) ->
-    title: "Baby Tracker"
-    content: templates.render("tracker.html", req, {})
+    data =
+        title: "Baby Tracker"
+
+    data.content = templates.render("tracker.html", req, data)
+
+    data
 
 exports.feeding = (doc, req) ->
     content = templates.render("timer.html", req, {})

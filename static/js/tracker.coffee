@@ -11,11 +11,11 @@ $ () ->
     init_comment()
     update_most_recent()
 
-    $("#left").click () ->
-        pop_timer "left"
+    #$("#left").click () ->
+    #    pop_timer "left"
 
-    $("#right").click () ->
-        pop_timer "right"
+    #$("#right").click () ->
+    #    pop_timer "right"
 
     $("#bm").click () ->
         save_document(doc_template.diaper_change(Date.now(),"bm",1))
@@ -24,7 +24,7 @@ $ () ->
         save_document(doc_template.diaper_change(Date.now(),"wet",1))
 
     $("[name=cancel]").click () ->
-        $.colorbox.close()
+
 
 
 save_document = (doc) ->
@@ -35,6 +35,7 @@ save_document = (doc) ->
     )
 
 
+<<<<<<< Updated upstream
 pop_timer = (side) ->
     get_timer().reset()
     get_timer().run_ticker()
@@ -56,6 +57,47 @@ open_colorbox = (user) ->
         opts[name] = value
 
     $.colorbox opts
+=======
+save_timer_state = () ->
+    cookies.setBrowserCookie({},
+        name: "timer_state"
+        value: JSON.stringify(
+            side: get_side()
+            timer: te.data("timer_ui")._timer
+        )
+        path: "/"
+        days: 1
+    )
+
+restore_timer_state = () ->
+    obj = JSON.parse(unescape(cookies.readBrowserCookie("timer_state")))
+
+    # and restore it's state
+    _timer = get_timer()
+
+    delete obj.timer._events
+
+    for own key, value of obj.timer
+        _timer[key] = value
+
+    # the 'tick' event may not be running if we just reloaded the page
+    # so, if we're in a 'running' state, make sure the ticker is also going
+    #
+    # need to figure out why this needs to be so complicated, I should be able
+    # to just 'run_ticker' and be done with it
+    if _timer.isRunning()
+        _timer.stop()
+        _timer.start()
+    else
+        _timer.run_ticker()
+
+delete_timer_state = () ->
+    cookies.setBrowserCookie {},
+    name: "timer_state"
+    value: ""
+    path: "/"
+    days: -2
+>>>>>>> Stashed changes
 
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
@@ -72,21 +114,25 @@ init_timer = () ->
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
+<<<<<<< Updated upstream
         save_document(doc_template.breast_feeding(Date.now(), get_side(), get_elapsed_time()))
         $.colorbox.close()
+=======
+        save_document(
+            doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
+            (err,resp) ->
+                delete_timer_state()
+        )
+
+>>>>>>> Stashed changes
 
 
 init_comment = () ->
     $("#comment").click () ->
         $("#comment_text").val("")
 
-        open_colorbox
-            title: "Comments"
-            href:  "#comment_form"
-
     $("#comment_done").click () ->
         save_document(doc_template.comment(Date.now(), get_comment()))
-        $.colorbox.close()
 
 get_elapsed_time = () ->
     Math.floor(get_timer().elapsed / 1000)
