@@ -1,7 +1,9 @@
 timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
-
+last_document = null
+templates = require "duality/templates"
+cookies = require "cookies"
 
 te = null
 
@@ -26,12 +28,46 @@ $ () ->
     $("[name=cancel]").click () ->
 
 
+    $("#timer [name=cancel]").click () ->
+        delete_timer_state()
 
-save_document = (doc) ->
+    $("#undo").click () ->
+        console.log "here"
+        if last_document?
+            $.mobile.showPageLoadingMsg()
+            db.current().removeDoc(last_document, (err, resp)->
+                $.mobile.hidePageLoadingMsg()
+                if not err?
+                    clear_undo()
+                    update_most_recent()
+            )
+
+    if cookies.readBrowserCookie("timer_state")?
+        restore_timer_state()
+
+
+clear_undo = () ->
+    last_document = null
+    $("#undo").hide()
+
+save_document = (doc,fn=null) ->
     $.mobile.showPageLoadingMsg()
     db.current().saveDoc(doc, (err,resp) ->
         $.mobile.hidePageLoadingMsg()
-        update_most_recent(true)
+
+        if not err?
+            update_most_recent(true)
+            last_document =
+                _id: resp.id
+                _rev: resp.rev
+
+            $("#undo").show()
+            setTimeout(clear_undo, 30*1000)
+        else
+            # do something with the error?
+
+        if $.isFunction fn
+            fn(err,resp)
     )
 
 
@@ -75,6 +111,49 @@ delete_timer_state = () ->
     path: "/"
     days: -2
 
+save_timer_state = () ->
+    cookies.setBrowserCookie({},
+        name: "timer_state"
+        value: JSON.stringify(
+            side: get_side()
+            timer: te.data("timer_ui")._timer
+        )
+        path: "/"
+        days: 1
+    )
+
+restore_timer_state = () ->
+    obj = JSON.parse(unescape(cookies.readBrowserCookie("timer_state")))
+
+    # bring up the timer again
+    pop_timer(obj.side)
+
+    # and restore it's state
+    _timer = get_timer()
+
+    delete obj.timer._events
+
+    for own key, value of obj.timer
+        _timer[key] = value
+
+    # the 'tick' event may not be running if we just reloaded the page
+    # so, if we're in a 'running' state, make sure the ticker is also going
+    #
+    # need to figure out why this needs to be so complicated, I should be able
+    # to just 'run_ticker' and be done with it
+    if _timer.isRunning()
+        _timer.stop()
+        _timer.start()
+    else
+        _timer.run_ticker()
+
+delete_timer_state = () ->
+    cookies.setBrowserCookie {},
+    name: "timer_state"
+    value: ""
+    path: "/"
+    days: -2
+
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
         startButton: te.find "#start"
@@ -85,8 +164,10 @@ init_timer = () ->
             te.find("#display").html(get_timer().getElapsed().toString())
         onStart: () ->
             te.find("#pause").focus()
+            save_timer_state()
         onStop: () ->
             te.find("#start").focus()
+            save_timer_state()
 
     te.find("#timer_done").click () ->
         get_timer().stop() if get_timer().isRunning()
@@ -95,6 +176,11 @@ init_timer = () ->
             (err,resp) ->
                 delete_timer_state()
         )
+<<<<<<< HEAD
+=======
+        $.colorbox.close()
+
+>>>>>>> master
 
 init_comment = () ->
     $("#comment").click () ->
@@ -121,11 +207,17 @@ get_comment = () ->
 
 update_most_recent = (once=false) =>
     db.current().getView("baby-couch","most_recent",{}, (err,resp) ->
-        text = ""
-        for type, doc of resp.rows[0].value
-            text += "<li>" + snippet(doc) + "</li>"
 
-        $("#most_recent_content").html(text);
+        if not err?
+            data =
+                items: []
+
+            for type, doc of resp.rows[0].value
+                data.items.push(snippet(doc))
+
+            $("#most_recent_content").html(templates.render("most_recent.html",{},data));
+        else
+            # do something with the error?
 
         if not once
             setTimeout update_most_recent, 60000
@@ -138,14 +230,19 @@ snippet = (doc) ->
     if doc.type == "breast_feeding"
         message = "Feeding"
 
-        if side == "left"
+        if doc.side == "left"
             message += "(L)"
         else
             message += "(R)"
 
         message += ": " + age(doc.timestamp)
     else if doc.type="diaper_change"
-        message = "Change: " + age(doc.timestamp)
+        if doc.contents == "bm"
+            message = "Poops: " + age(doc.timestamp)
+        else if doc.contents == "wet"
+            message = "Peeps: " + age(doc.timestamp)
+        else
+            message = "error"
 
     message
 
@@ -155,7 +252,7 @@ age = (timestamp) ->
     time = ""
 
     if elapsed.hour > 24
-        days = Math.floor(elapsed.hour/24) + "."
+        days = Math.floor(elapsed.hour/24)
         remainder = elapsed.hour % 24
 
         if remainder > 18
@@ -163,7 +260,7 @@ age = (timestamp) ->
         else if remainder > 8
             days += .5
 
-        time = days + " days"
+        time = days + "d"
     else if elapsed.hour > 0
         hours = elapsed.hour
         if hours < 6
@@ -171,10 +268,8 @@ age = (timestamp) ->
                 hours++
             else if elapsed.min > 20
                 hours += .5
-        time = hours + " hours"
-    else if elapsed.min >= 15
-        time = (Math.floor(elapsed.min/15) * 15) + " minutes"
+        time = hours + "h"
     else
-        time = "< 15 minutes"
+        time = elapsed.min + "m"
 
-    time += " ago"
+    time

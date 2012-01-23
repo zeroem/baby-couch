@@ -19,6 +19,11 @@ exports.supplement =
         if doc.type == "supplement"
             emit doc.timestamp, doc
 
+exports.timeline =
+    map: (doc) ->
+        if doc.type?
+            emit doc.timestamp, doc
+
 exports.most_recent =
     map: (doc) ->
         most_recent_list =
@@ -32,7 +37,11 @@ exports.most_recent =
         result = {}
 
         process = (doc,result) ->
-            type = doc.type
+
+            if doc.type == "diaper_change"
+                type = doc.contents
+            else
+                type = doc.type
 
             if not result[type]?
                 result[type] = doc
