@@ -4,11 +4,15 @@
   </header>
   <div data-role="content" id="tracker_ui">
     <fieldset class="ui-grid-a">
-      <div class="ui-block-a"><a data-role="button" href="#two" id="left">Left</a></div>
-      <div class="ui-block-b"><a data-role="button" href="#two" id="right">Right</a></div>
+      <div class="ui-block-a">
+        <a data-role="button" href="#two" id="left" name="feeding">Left</a>
+      </div>
+      <div class="ui-block-b">
+        <a data-role="button" href="#two" id="right" name="feeding">Right</a>
+      </div>
     </fieldset>
-    <div style="display: none;" class="wide-button">
-      <a id="supplement">Supplement</a>
+    <div>
+      <a data-role="button" href="#four" id="supplement">Supplement</a>
     </div>
 
     <fieldset class="ui-grid-a">
@@ -39,6 +43,15 @@
   </header>
   <div data-role="content" id="comment_wrapper">
     {{#include "comment_form.html"}}{{/include}}
+  </div>
+</div>
+
+<div data-role="page" id="four">
+  <header data-role="header">
+    <h1>Supplement</h1>
+  </header>
+  <div data-role="content" id="">
+    {{#include "supplement_form.html"}}{{/include}}
   </div>
 </div>
 

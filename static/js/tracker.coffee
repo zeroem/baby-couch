@@ -11,7 +11,11 @@ $ () ->
     te = $ "#timer"
     init_timer()
     init_comment()
+    init_supplement()
     update_most_recent()
+
+    $("[name=feeding]").click (event) ->
+        $("#side").val(event.delegateTarget.id)
 
     $("#bm").click () ->
         save_document(doc_template.diaper_change(Date.now(),"bm",1))
@@ -26,7 +30,6 @@ $ () ->
         delete_timer_state()
 
     $("#undo").click () ->
-        console.log "here"
         if last_document?
             $.mobile.showPageLoadingMsg()
             db.current().removeDoc(last_document, (err, resp)->
@@ -39,6 +42,22 @@ $ () ->
     if cookies.readBrowserCookie("timer_state")?
         restore_timer_state()
 
+
+init_supplement = () ->
+    form = $ "#supplement_form"
+    amount = form.find("#supplement_amount")
+    type = form.find("#supplement_type")
+    form.find("[name=save]").click( () ->
+        save_document(
+            doc_template.supplement(
+                Date.now(),
+                amount.val(),
+                type.val()
+            ),
+            (err,resp) ->
+                amount.val("")
+        )
+    )
 
 clear_undo = () ->
     last_document = null
@@ -79,48 +98,7 @@ save_timer_state = () ->
 restore_timer_state = () ->
     obj = JSON.parse(unescape(cookies.readBrowserCookie("timer_state")))
 
-    # and restore it's state
-    _timer = get_timer()
-
-    delete obj.timer._events
-
-    for own key, value of obj.timer
-        _timer[key] = value
-
-    # the 'tick' event may not be running if we just reloaded the page
-    # so, if we're in a 'running' state, make sure the ticker is also going
-    #
-    # need to figure out why this needs to be so complicated, I should be able
-    # to just 'run_ticker' and be done with it
-    if _timer.isRunning()
-        _timer.stop()
-        _timer.start()
-    else
-        _timer.run_ticker()
-
-delete_timer_state = () ->
-    cookies.setBrowserCookie {},
-    name: "timer_state"
-    value: ""
-    path: "/"
-    days: -2
-
-save_timer_state = () ->
-    cookies.setBrowserCookie({},
-        name: "timer_state"
-        value: JSON.stringify(
-            side: get_side()
-            timer: te.data("timer_ui")._timer
-        )
-        path: "/"
-        days: 1
-    )
-
-restore_timer_state = () ->
-    obj = JSON.parse(unescape(cookies.readBrowserCookie("timer_state")))
-
-    # bring up the timer again
-    pop_timer(obj.side)
+    $("#side").val(obj.side)
 
     # and restore it's state
     _timer = get_timer()
@@ -147,6 +125,7 @@ delete_timer_state = () ->
     value: ""
     path: "/"
     days: -2
+
 
 init_timer = () ->
     te.data "timer_ui", new timer.TimerUI
@@ -164,12 +143,14 @@ init_timer = () ->
             save_timer_state()
 
     te.find("#timer_done").click () ->
-        get_timer().stop() if get_timer().isRunning()
-        save_document(
-            doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
-            (err,resp) ->
-                delete_timer_state()
-        )
+        if get_elapsed_time() > 0
+            get_timer().stop() if get_timer().isRunning()
+            save_document(
+                doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
+                (err,resp) ->
+                    delete_timer_state()
+                    get_timer().reset()
+            )
 
 init_comment = () ->
     $("#comment").click () ->
