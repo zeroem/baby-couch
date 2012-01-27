@@ -99,6 +99,9 @@ exports.Elapsed = class Elapsed
     toString: () ->
         [@_pad(@hour),@_pad(@min),@_pad(@sec)].join(":") + "." + @_trunc(@ms)
 
+    displayMinutesAndSeconds: () ->
+        [@_pad(@min),@_pad(@sec)].join(":")
+
 
 exports.TimerUI = class TimerUI
     constructor: (@options = {}) ->

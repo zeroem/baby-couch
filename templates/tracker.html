@@ -1,6 +1,8 @@
 <div id="one" data-role="page">
   <header data-role="header">
+    <a href="#" style="display: none;">dummy button</a>
     <h1>{{title}}</h1>
+    {{#include "undo_button.html"}}{{/include}}
   </header>
   <div data-role="content" id="tracker_ui">
     <fieldset class="ui-grid-a">
@@ -30,7 +32,9 @@
 
 <div data-role="page" id="two">
   <header data-role="header">
+    {{#include "back_button.html"}}{{/include}}
     <h1>Feeding Timer</h1>
+    {{#include "undo_button.html"}}{{/include}}
   </header>
   <div data-role="content" id="timer_wrapper">
     {{#include "timer.html"}}{{/include}}
@@ -39,7 +43,9 @@
 
 <div data-role="page" id="three">
   <header data-role="header">
+    {{#include "back_button.html"}}{{/include}}
     <h1>Comments</h1>
+    {{#include "undo_button.html"}}{{/include}}
   </header>
   <div data-role="content" id="comment_wrapper">
     {{#include "comment_form.html"}}{{/include}}
@@ -48,7 +54,9 @@
 
 <div data-role="page" id="four">
   <header data-role="header">
+    {{#include "back_button.html"}}{{/include}}
     <h1>Supplement</h1>
+    {{#include "undo_button.html"}}{{/include}}
   </header>
   <div data-role="content" id="">
     {{#include "supplement_form.html"}}{{/include}}

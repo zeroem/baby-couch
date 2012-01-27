@@ -2,6 +2,7 @@ timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
 last_document = null
+undo_timeout = null
 templates = require "duality/templates"
 cookies = require "cookies"
 
@@ -29,7 +30,7 @@ $ () ->
     $("#timer [name=cancel]").click () ->
         delete_timer_state()
 
-    $("#undo").click () ->
+    $("[name=undo]").click () ->
         if last_document?
             $.mobile.showPageLoadingMsg()
             db.current().removeDoc(last_document, (err, resp)->
@@ -39,43 +40,48 @@ $ () ->
                     update_most_recent()
             )
 
+    $("[name=back]").click () ->
+        clear_undo()
+
     if cookies.readBrowserCookie("timer_state")?
         restore_timer_state()
 
 
 init_supplement = () ->
     form = $ "#supplement_form"
-    amount = form.find("#supplement_amount")
-    type = form.find("#supplement_type")
-    form.find("[name=save]").click( () ->
-        save_document(
-            doc_template.supplement(
-                Date.now(),
-                amount.val(),
-                type.val()
-            ),
-            (err,resp) ->
-                amount.val("")
-        )
-    )
+    form.find("[name=save]").click () ->
+        amount = parseInt(form.find("#supplement_amount").val())
+        type = form.find("#supplement_type").val()
+        if amount and amount > 0
+            save_document(
+                doc_template.supplement(
+                    Date.now(),
+                    amount,
+                    type
+                ),
+                (err,resp) ->
+                    amount.val("")
+            )
 
 clear_undo = () ->
     last_document = null
-    $("#undo").hide()
+    undo_timeout = null
+    $("[name=undo]").hide()
 
 save_document = (doc,fn=null) ->
     $.mobile.showPageLoadingMsg()
     db.current().saveDoc(doc, (err,resp) ->
         $.mobile.hidePageLoadingMsg()
-
         if not err?
             update_most_recent(true)
             last_document =
                 _id: resp.id
                 _rev: resp.rev
 
-            $("#undo").show()
-            setTimeout(clear_undo, 30*1000)
+            $("[name=undo]").show()
+            clearTimeout undo_timeout if undo_timeout?
+
+            undo_timeout = setTimeout(clear_undo, 30*1000)
         else
             # do something with the error?
 
@@ -128,23 +134,29 @@ delete_timer_state = () ->
 
 
 init_timer = () ->
-    te.data "timer_ui", new timer.TimerUI
+
+    ui = new timer.TimerUI
         startButton: te.find "#start"
         stopButton:  te.find "#pause"
         resetButton: te.find "#reset"
-        tick_rate:   50
+        tick_rate:   200
         onTick: (timer) ->
-            te.find("#display").html(get_timer().getElapsed().toString())
+            te.find("#display").html(get_timer().getElapsed().displayMinutesAndSeconds())
         onStart: () ->
-            te.find("#pause").focus()
+            te.find("#start").hide()
+            te.find("#pause").show()
             save_timer_state()
         onStop: () ->
-            te.find("#start").focus()
+            te.find("#pause").hide()
+            te.find("#start").show()
             save_timer_state()
 
+
+    te.data "timer_ui", ui
+
     te.find("#timer_done").click () ->
+        get_timer().stop() if get_timer().isRunning()
         if get_elapsed_time() > 0
-            get_timer().stop() if get_timer().isRunning()
             save_document(
                 doc_template.breast_feeding(get_timer().stop_time, get_side(), get_elapsed_time()),
                 (err,resp) ->

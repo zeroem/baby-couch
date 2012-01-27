@@ -2,17 +2,17 @@
   <form>
     <input type="hidden" id="side" name="side" />
 
-    <h1 id="display">00:00:00.0</h1>
+    <h1 id="display">00:00</h1>
 
-    <div class="buttons" data-role="controlgroup" data-type="horizontal">
-      <button data-theme="b" type="button" autofocus="autofocus" id="start">start</button>
-      <button data-theme="e" type="button" id="pause">pause</button>
-      <button data-theme="c" type="button" id="reset">reset</button>
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <a href="#" data-role="button" data-theme="e" autofocus="autofocus" id="start">start</a>
+        <a href="#" data-role="button" style="display: none;" data-theme="e" id="pause">pause</a>
+      </div>
+      <div class="ui-block-b">
+        <a href="#" data-role="button" data-theme="c" id="reset">reset</a>
+      </div>
     </div>
-    
-    <fieldset class="ui-grid-a">
-      <div class="ui-block-a"><button id="timer_done" type="button">Save</button></div>
-      <div class="ui-block-b"><a href="#one" data-rel="back" data-role="button">Back</a></div>
-    </fieldset>
+    <button id="timer_done" data-theme="b" type="button">Save</button>
   </form>
 </div>
