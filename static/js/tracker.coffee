@@ -32,7 +32,7 @@ $ () ->
 
     $("[name=undo]").click () ->
         if last_document?
-            $.mobile.showPageLoadingMsg()
+            show_loading_with_message("Reverting...")
             db.current().removeDoc(last_document, (err, resp)->
                 $.mobile.hidePageLoadingMsg()
                 if not err?
@@ -60,7 +60,7 @@ init_supplement = () ->
                     type
                 ),
                 (err,resp) ->
-                    amount.val("")
+                    form.find("#supplement_amount").val("")
             )
 
 clear_undo = () ->
@@ -69,7 +69,7 @@ clear_undo = () ->
     $("[name=undo]").hide()
 
 save_document = (doc,fn=null) ->
-    $.mobile.showPageLoadingMsg()
+    show_loading_with_message("Saving...")
     db.current().saveDoc(doc, (err,resp) ->
         $.mobile.hidePageLoadingMsg()
         if not err?
@@ -89,6 +89,12 @@ save_document = (doc,fn=null) ->
             fn(err,resp)
     )
 
+
+show_loading_with_message = (msg) ->
+    old_message = $.mobile.loadingMessage
+    $.mobile.loadingMessage = msg
+    $.mobile.showPageLoadingMsg()
+    $.mobile.loadingMessage = old_message
 
 save_timer_state = () ->
     cookies.setBrowserCookie({},
@@ -127,10 +133,10 @@ restore_timer_state = () ->
 
 delete_timer_state = () ->
     cookies.setBrowserCookie {},
-    name: "timer_state"
-    value: ""
-    path: "/"
-    days: -2
+        name: "timer_state"
+        value: ""
+        path: "/"
+        days: -1
 
 
 init_timer = () ->
@@ -209,16 +215,19 @@ update_most_recent = (once=false) =>
 snippet = (doc) ->
     message = ""
 
-    if doc.type == "breast_feeding"
+    if doc.type == "breast_feeding" or doc.type == "supplement"
         message = "Feeding"
 
-        if doc.side == "left"
-            message += "(L)"
+        if doc.type == "breast_feeding"
+            if doc.side == "left"
+                message += "(L)"
+            else
+                message += "(R)"
         else
-            message += "(R)"
+            message += "(S)"
 
         message += ": " + age(doc.timestamp)
-    else if doc.type="diaper_change"
+    else if doc.type == "diaper_change"
         if doc.contents == "bm"
             message = "Poops: " + age(doc.timestamp)
         else if doc.contents == "wet"

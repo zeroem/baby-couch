@@ -28,6 +28,7 @@ exports.most_recent =
     map: (doc) ->
         most_recent_list =
             "breast_feeding": null
+            "supplement": null
             "diaper_change": null
 
         if most_recent_list.hasOwnProperty doc.type
@@ -40,6 +41,8 @@ exports.most_recent =
 
             if doc.type == "diaper_change"
                 type = doc.contents
+            else if doc.type == "supplement" or doc.type == "breast_feeding"
+                type = "feeding"
             else
                 type = doc.type
 
