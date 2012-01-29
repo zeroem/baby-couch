@@ -1,11 +1,11 @@
 timer = require "utils/timer"
 db = require "db"
 doc_template = require "lib/docs"
-last_document = null
-undo_timeout = null
 templates = require "duality/templates"
 cookies = require "cookies"
 
+last_document = null
+undo_timeout = null
 te = null
 
 $ () ->
@@ -156,6 +156,10 @@ init_timer = () ->
             te.find("#pause").hide()
             te.find("#start").show()
             save_timer_state()
+        onReset: () ->
+            te.find("#pause").hide()
+            te.find("#start").show()
+            delete_timer_state()
 
 
     te.data "timer_ui", ui
