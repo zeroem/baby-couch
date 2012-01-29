@@ -3,8 +3,8 @@ events = require "events"
 exports.Timer = class Timer extends events.EventEmitter
     elapsed: 0
     start_time: null
-    tick_rate: 100
     stop_time: null
+    tick_rate: 100
 
     constructor: (@tick_rate=100) ->
         super()
@@ -17,8 +17,12 @@ exports.Timer = class Timer extends events.EventEmitter
 
     # not sure if this should trigger a "stop" event, or it's own "reset" event
     reset: () ->
-        was_not_running = not @stop()
+        was_not_running = @isStopped()
+        @start_time = null
+        @stop_time = null
         @elapsed = 0
+
+        @emit "reset", @
 
         # send out a tick with the zeroed out timer
         # if the timer was already paused, the tick event
@@ -109,6 +113,7 @@ exports.TimerUI = class TimerUI
 
         if @options.onStart? then @_timer.on "start", @options.onStart
         if @options.onStop? then @_timer.on "stop", @options.onStop
+        if @options.onReset? then @_timer.on "reset", @options.onReset
         if @options.onTick? then @_timer.on "tick", @options.onTick
 
         if @options.startButton?
