@@ -5,8 +5,8 @@ module.exports = [
     from: "/"
     to: "_show/tracker"
 ,
-    from: "/chart"
-    to: "_list/chart/timeline"
+    from: "/charts"
+    to: "_show/charts"
 ,
     from: "/tracker/"
     to: "_show/tracker"

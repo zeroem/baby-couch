@@ -40,3 +40,7 @@ exports.not_found = (doc, req) ->
     code: 404
     title: "404 - Not Found"
     content: templates.render("404.html", req, {})
+
+exports.charts = (doc, req) ->
+    title: "Charts"
+    content: templates.render("charts.html", req, {})
